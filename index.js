@@ -10,6 +10,19 @@ const app = express();
 
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 
+// multer middleware
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, "./uploads");
+    },
+    filename: function(req, file, cb){
+        cb(null, file.fieldname + "-" + uuidv4() + path.extname(file.originalname))
+    }
+});
+
+// multer configuration
+const upload = multer({ storage: storage });
+
 // Handling cors
 app.use(cors({
     origin: allowedOrigins,
@@ -34,6 +47,9 @@ app.get('/', (req, res) => {
     res.json({message: "Hello to video upload project"});
 });
 
+app.post("/upload", upload.single('file'), () => {
+    console.log('File uploaded');
+});
 
 app.listen(PORT, () => {
     console.log(`App listening on http://localhost:${PORT}`)
