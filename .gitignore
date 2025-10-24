@@ -43,6 +43,7 @@ jspm_packages/
 
 # video upload directory 
 uploads/
+test-video/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
