@@ -1,34 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useRef } from 'react'
+import VideoPlayer from './VideoPlayer.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const playerRef = useRef(null);
+  const videoLink = "http://localhost:8000/uploads/courses/6856ba5e-cc4b-4388-8f12-084ded5fa91c/index.m3u8"
+
+  const videoPlayerOptions = {
+    controls: true,
+    responsive: true,
+    fluid: true,
+    sources: [
+      {
+        src: videoLink,
+        type: "application/x-mpegURL"
+      }
+    ]
+  }
+
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    // You can handle player events here, for example: 
+    player.on("waiting", () => {
+      videojs.log("player is waiting");
+    });
+
+    player.on("dispose", () => {
+      videojs.log("player will dispose");
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+   <>
+    <div>
+      <h1>Video player</h1>
+    </div>
+
+    <VideoPlayer
+      options={videoPlayerOptions}
+      onReady={handlePlayerReady}
+    />
+   </>
   )
 }
 
